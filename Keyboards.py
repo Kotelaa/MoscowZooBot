@@ -1,11 +1,11 @@
 from aiogram.utils.keyboard import KeyboardBuilder, KeyboardButton, \
     ReplyKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardMarkup
 
 
-# В чем разница ReplyKeyboardBuilder и KeyboardBuilder
 def commands_kb():
-    kb = ReplyKeyboardBuilder()
+    keyboard = ReplyKeyboardBuilder()
     commands = ['/description',
             '/commands',
             '/help',
@@ -14,9 +14,16 @@ def commands_kb():
             '/survey']
 
     for command in commands:
-        kb.add(KeyboardButton(text=command))
-    kb.adjust(3)
-    return kb.as_markup(resize_keyboard=True)
+        keyboard.add(KeyboardButton(text=command))
+    keyboard.adjust(3)
+    return keyboard.as_markup(resize_keyboard=True)
+
+
+animal_custom_kb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Узнать больше о опеке',
+                          url='https://moscowzoo.ru/about/guardianship/')]])
+
+
 
 
 
