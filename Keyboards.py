@@ -19,7 +19,7 @@ def commands_kb():
     return keyboard.as_markup(resize_keyboard=True)
 
 
-animal_custom_kb = InlineKeyboardMarkup(inline_keyboard=[
+animal_custody_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Узнать больше о опеке',
                           url='https://moscowzoo.ru/about/guardianship/')]])
 
