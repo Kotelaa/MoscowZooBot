@@ -1,17 +1,16 @@
 import asyncio
 import logging
-import inspect
 
 from aiogram import Dispatcher, Router, Bot
 from aiogram.filters import Command, CommandStart
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram import types
 from aiogram.types import Message
 from aiogram.utils.formatting import Bold, as_list, as_marked_list, as_line, \
     Italic
 
 from TokenData import TOKEN
+from utils import ALL_CONTACTS
 from Keyboards import commands_kb, animal_custody_kb
 
 
@@ -66,6 +65,18 @@ async def about_message(message: Message):
     await message.answer(content.as_html(), reply_markup=animal_custody_kb)
 
 
+@router.message(Command('contact'))
+async def contact_message(message: Message):
+    """ Contact message using command /contact """
+    content = as_list(
+        *ALL_CONTACTS,
+        sep='\n\n'
+    )
+    await message.answer(content.as_html())
+
+
+
+
 async def start_bot():
     bot = Bot(token=TOKEN,
               default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -80,3 +91,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Bot stopped!')
 
+# СОЗДАТЬ ВЕТКУ
