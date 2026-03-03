@@ -75,8 +75,6 @@ async def contact_message(message: Message):
     await message.answer(content.as_html())
 
 
-
-
 async def start_bot():
     bot = Bot(token=TOKEN,
               default=DefaultBotProperties(parse_mode=ParseMode.HTML))
