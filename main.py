@@ -11,7 +11,8 @@ from aiogram.utils.formatting import Bold, as_list, as_marked_list, as_line, \
 
 from TokenData import TOKEN
 from utils import ALL_CONTACTS
-from Keyboards import commands_kb, animal_custody_kb
+from quiz import router_quiz
+from Keyboards import commands_kb, animal_custody_kb, phone_kb
 
 
 router = Router()
@@ -72,7 +73,7 @@ async def contact_message(message: Message):
         *ALL_CONTACTS,
         sep='\n\n'
     )
-    await message.answer(content.as_html())
+    await message.answer(content.as_html(), reply_markup=phone_kb)
 
 
 async def start_bot():
@@ -80,6 +81,7 @@ async def start_bot():
               default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
     dp.include_router(router)
+    dp.include_router(router_quiz)
     await dp.start_polling(bot)
 
 
