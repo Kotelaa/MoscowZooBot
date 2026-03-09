@@ -8,6 +8,11 @@ from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 from Keyboards import survey_options_kb
 from quiz_questions import QUIZ_QUESTIONS
 
+DEFAULT_QUIZ_DATA = {
+    'current_step': 0,
+    'scores': {'mammals': 0, 'birds': 0, 'reptiles': 0, 'amphibians': 0}
+}
+
 router_quiz = Router()
 
 class Quiz(StatesGroup):
@@ -15,13 +20,15 @@ class Quiz(StatesGroup):
 
 @router_quiz.message(Command('survey'))
 async def start_survey(message: Message, state: FSMContext):
+    " Function sets the initial state "
     await state.set_state(Quiz.asking)
-    await state.update_data(current_step=0, scores={'mammals': 0, 'birds': 0, 'reptiles': 0, 'amphibians': 0})
+    await state.update_data(**DEFAULT_QUIZ_DATA)
     await handle_survey(message, state)
 
 
 @router_quiz.message(Quiz.asking)
 async def handle_survey(message: Message, state: FSMContext):
+    """ Asks questions about the user's compatibility with different animals """
     data = await state.get_data()
     current_step = data.get('current_step', 0)
     scores = data.get('scores', {'mammals': 0, 'birds': 0, 'reptiles': 0, 'amphibians': 0})
@@ -48,6 +55,7 @@ async def handle_survey(message: Message, state: FSMContext):
 
 
 async def show_result(message: Message, state: FSMContext, winner: str):
+    """ Gives result of the survey """
     results = {
         "mammals": "Тебе подходит млекопитающее! Твой символ – заботливая Панда. 🐼",
         "birds": "Тебе подходит птица! Твой символ – вольный Розовый фламинго. 🦩",

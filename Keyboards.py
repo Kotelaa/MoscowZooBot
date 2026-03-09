@@ -5,6 +5,7 @@ from aiogram.utils.keyboard import ReplyKeyboardMarkup
 
 
 def commands_kb():
+    """ Telegram commands keyboard """
     keyboard = ReplyKeyboardBuilder()
     commands = ['/description',
             '/commands',

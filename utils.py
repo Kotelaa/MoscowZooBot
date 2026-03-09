@@ -1,7 +1,20 @@
 import re
-from aiogram.utils.formatting import as_line, TextLink, \
+from aiogram.utils.formatting import as_line, as_list, TextLink, \
     Bold
 
+ABOUT_ZOO = as_list(
+    as_line('Мы — один из старейших зоопарков Европы. Наш символ —',
+            Bold('манул'),
+            ' олицетворяющий скрытую силу и мудрость природы. 🐱'),
+    'Это не просто парк для прогулок, а место, где спасают редкие виды '
+    'и заботятся о будущем планеты. 🌿')
+
+ABOUT_CUSTODY = as_line(
+    'Хотите личную дружбу с пандами или белым медведем? В программе ',
+    Bold('«Опека»'),
+    ' вы помогаете любимому животному и получаете именную табличку на его '
+    'вольере. \n ',
+    Bold('Помогайте нам оберегать мир природы вместе! ❤️'))
 
 
 def add_number(name: str, phone : str =None, mail : str =None):
