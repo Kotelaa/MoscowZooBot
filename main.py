@@ -10,7 +10,7 @@ from aiogram.utils.formatting import Bold, as_list, as_marked_list, as_line, \
     Italic
 
 from TokenData import TOKEN
-from utils import ALL_CONTACTS
+from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY
 from quiz import router_quiz
 from Keyboards import commands_kb, animal_custody_kb, phone_kb
 
@@ -40,27 +40,13 @@ async def welcome_message(message: Message):
 @router.message(Command('about'))
 async def about_message(message: Message):
     """ Some information about the ZOO using command /about """
-    about_zoo = as_list(
-        as_line('Мы — один из старейших зоопарков Европы. Наш символ —',
-                Bold('манул'),
-                ' олицетворяющий скрытую силу и мудрость природы. 🐱'),
-        'Это не просто парк для прогулок, а место, где спасают редкие виды '
-        'и заботятся о будущем планеты. 🌿')
-
-    about_custody = as_line(
-        'Хотите личную дружбу с пандами или белым медведем? В программе ',
-        Bold('«Опека»'),
-        ' вы помогаете любимому животному и получаете именную табличку на его '
-        'вольере. \n ',
-        Bold('Помогайте нам оберегать мир природы вместе! ❤️'))
-
     content = as_list(
         Bold('Московский зоопарк 🐾'),
         Italic('Оазис живой природы с 1864 года'),
-        about_zoo,
+        ABOUT_ZOO,
         '',
         Bold('✨ Станьте хранителем!'),
-        about_custody
+        ABOUT_CUSTODY
     )
 
     await message.answer(content.as_html(), reply_markup=animal_custody_kb)
@@ -77,6 +63,7 @@ async def contact_message(message: Message):
 
 
 async def start_bot():
+    """ Main function to start the bot """
     bot = Bot(token=TOKEN,
               default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
