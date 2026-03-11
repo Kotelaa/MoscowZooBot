@@ -63,6 +63,7 @@ async def contact_message(message: Message):
 
 
 async def start_bot():
+    """ Main function to start the bot """
     bot = Bot(token=TOKEN,
               default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
