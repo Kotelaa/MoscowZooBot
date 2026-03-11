@@ -1,22 +1,38 @@
-import re
+# import re
 from aiogram.utils.formatting import as_line, TextLink, \
-    Bold
+    Bold, as_list
+from aiogram import Router, F
+from aiogram.types import Message
 
+utils_router = Router()
+
+
+ABOUT_ZOO = as_list(
+        as_line(
+            'Мы — один из старейших зоопарков Европы. Наш символ —',
+            Bold('манул'),
+            ' олицетворяющий скрытую силу и мудрость природы. 🐱'),
+    'Это не просто парк для прогулок, а место, где спасают редкие виды '
+    'и заботятся о будущем планеты. 🌿')
+
+ABOUT_CUSTODY = as_line(
+        'Хотите личную дружбу с пандами или белым медведем? В программе ',
+        Bold('«Опека»'),
+        ' вы помогаете любимому животному и получаете именную табличку на его '
+        'вольере. \n ',
+        Bold('Помогайте нам оберегать мир природы вместе! ❤️'))
 
 
 def add_number(name: str, phone : str =None, mail : str =None):
     """ Add a number to the /contact command """
-    content = as_line(
-        Bold(f'{name}: ')
-    )
+    content = [Bold(f'{name}: ')]
     if phone:
-        clean_phone = re.sub(r'[^\d+]', '', phone)
-        content += TextLink(phone, url=f'tel:{clean_phone}')
-        content += '  '
+        # clean_phone = re.sub(r'[^\d+]', '', phone)
+        content.append(f'{phone}')
+        content.append('  ')
     if mail:
-        content += TextLink(mail, url=f'mailto:{mail}')
-        content += '  '
-    return content
+        content.append(TextLink(mail, url=f'mail:{mail}'))
+    return as_line(*content)
 
 
 ALL_CONTACTS = [
@@ -43,3 +59,10 @@ ALL_CONTACTS = [
                    'и благотворительных программ',
                    mail='partnershipzoo@culture.mos.ru')]
 
+
+@utils_router.message(F.photo)
+async def get_photo_id(message: Message):
+    photo_id = message.photo[-1].file_id
+    await message.answer(f"ID твоей картинки:\n<code>{photo_id}</code>",
+                         parse_mode="HTML")
+    print(f"File ID: {photo_id}")

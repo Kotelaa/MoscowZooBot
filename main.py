@@ -6,13 +6,13 @@ from aiogram.filters import Command, CommandStart
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import Message
-from aiogram.utils.formatting import Bold, as_list, as_marked_list, as_line, \
+from aiogram.utils.formatting import Bold, as_list, as_marked_list,  \
     Italic
 
 from TokenData import TOKEN
-from utils import ALL_CONTACTS
+from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY, utils_router
 from quiz import router_quiz
-from Keyboards import commands_kb, animal_custody_kb, phone_kb
+from Keyboards import commands_kb, animal_custody_kb
 
 
 router = Router()
@@ -40,27 +40,13 @@ async def welcome_message(message: Message):
 @router.message(Command('about'))
 async def about_message(message: Message):
     """ Some information about the ZOO using command /about """
-    about_zoo = as_list(
-        as_line('Мы — один из старейших зоопарков Европы. Наш символ —',
-                Bold('манул'),
-                ' олицетворяющий скрытую силу и мудрость природы. 🐱'),
-        'Это не просто парк для прогулок, а место, где спасают редкие виды '
-        'и заботятся о будущем планеты. 🌿')
-
-    about_custody = as_line(
-        'Хотите личную дружбу с пандами или белым медведем? В программе ',
-        Bold('«Опека»'),
-        ' вы помогаете любимому животному и получаете именную табличку на его '
-        'вольере. \n ',
-        Bold('Помогайте нам оберегать мир природы вместе! ❤️'))
-
     content = as_list(
         Bold('Московский зоопарк 🐾'),
         Italic('Оазис живой природы с 1864 года'),
-        about_zoo,
+        ABOUT_ZOO,
         '',
         Bold('✨ Станьте хранителем!'),
-        about_custody
+        ABOUT_CUSTODY,
     )
 
     await message.answer(content.as_html(), reply_markup=animal_custody_kb)
@@ -69,11 +55,11 @@ async def about_message(message: Message):
 @router.message(Command('contact'))
 async def contact_message(message: Message):
     """ Contact message using command /contact """
-    content = as_list(
+    content = as_marked_list(
         *ALL_CONTACTS,
-        sep='\n\n'
+        marker='\n🌱 '
     )
-    await message.answer(content.as_html(), reply_markup=phone_kb)
+    await message.answer(**content.as_kwargs())
 
 
 async def start_bot():
@@ -82,6 +68,7 @@ async def start_bot():
     dp = Dispatcher()
     dp.include_router(router)
     dp.include_router(router_quiz)
+    dp.include_router(utils_router)
     await dp.start_polling(bot)
 
 

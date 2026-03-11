@@ -6,7 +6,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 
 from Keyboards import survey_options_kb
-from quiz_questions import QUIZ_QUESTIONS
+from quiz_questions import QUIZ_QUESTIONS, RESULTS
 
 router_quiz = Router()
 
@@ -48,18 +48,14 @@ async def handle_survey(message: Message, state: FSMContext):
 
 
 async def show_result(message: Message, state: FSMContext, winner: str):
-    results = {
-        "mammals": "Тебе подходит млекопитающее! Твой символ – заботливая Панда. 🐼",
-        "birds": "Тебе подходит птица! Твой символ – вольный Розовый фламинго. 🦩",
-        "reptiles": "Тебе подходит рептилия! Твой символ – мудрый Питон. 🐍",
-        "amphibians": "Тебе подходит земноводное! Твой символ – адаптивная Лягушка. 🐸"
-    }
-
-    await message.answer(
-        f"Тест завершен!\n\n{results[winner]}",
+    survey_result = RESULTS.get(winner)
+    await message.answer_photo(
+        photo=survey_result.get('image'),
+        caption=f"Тест завершен!\n\n{survey_result.get('message')}",
         reply_markup=ReplyKeyboardRemove()
     )
     await state.clear()
+
 
 
 
