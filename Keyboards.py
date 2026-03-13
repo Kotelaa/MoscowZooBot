@@ -28,6 +28,11 @@ animal_custody_kb = InlineKeyboardMarkup(inline_keyboard=[
 # phone_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
 #     text="📞 Позвонить в зоопарк", url="tel:+74957753370")]])
 
+web_kb = InlineKeyboardMarkup(
+    inline_keyboard=[[InlineKeyboardButton
+                      (text='🤗  Посетите наш сайт',
+                       url='https://moscowzoo.ru/')]])
+
 
 def survey_options_kb(options):
     keyboard = ReplyKeyboardBuilder()

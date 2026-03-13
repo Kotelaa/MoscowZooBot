@@ -12,7 +12,7 @@ from aiogram.utils.formatting import Bold, as_list, as_marked_list,  \
 from TokenData import TOKEN
 from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY, utils_router
 from quiz import router_quiz
-from Keyboards import commands_kb, animal_custody_kb
+from Keyboards import commands_kb, animal_custody_kb, web_kb
 
 
 router = Router()
@@ -59,7 +59,7 @@ async def contact_message(message: Message):
         *ALL_CONTACTS,
         marker='\n🌱 '
     )
-    await message.answer(**content.as_kwargs())
+    await message.answer(**content.as_kwargs(), reply_markup=web_kb)
 
 
 async def start_bot():
