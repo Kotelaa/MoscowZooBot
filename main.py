@@ -10,7 +10,8 @@ from aiogram.utils.formatting import Bold, as_list, as_marked_list,  \
     Italic
 
 from TokenData import TOKEN
-from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY, utils_router
+from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY, utils_router, \
+    HELP_MESSAGE
 from quiz import router_quiz
 from Keyboards import commands_kb, animal_custody_kb, web_kb
 
@@ -18,6 +19,7 @@ from Keyboards import commands_kb, animal_custody_kb, web_kb
 router = Router()
 
 @router.message(CommandStart())
+@router.message(Command('commands'))
 async def welcome_message(message: Message):
     """ Welcome message using command /start """
     content = as_list(
@@ -25,7 +27,6 @@ async def welcome_message(message: Message):
         'Добро пожаловать в Бот Московского зоопарка!\n',
         Bold('Доступные команды: '),
         as_marked_list(
-            '/description',
             '/commands',
             '/help',
             '/about',
@@ -35,6 +36,12 @@ async def welcome_message(message: Message):
         )
     )
     await message.answer(content.as_html(), reply_markup=commands_kb())
+
+
+@router.message(Command('help'))
+async def help_message(message: Message):
+    """ Help message using command /help """
+    await message.answer(HELP_MESSAGE.as_html(), reply_markup=commands_kb())
 
 
 @router.message(Command('about'))
