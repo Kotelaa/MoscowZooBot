@@ -6,13 +6,13 @@ from aiogram.filters import Command, CommandStart
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import Message
-from aiogram.utils.formatting import Bold, as_list, as_marked_list, as_line, \
+from aiogram.utils.formatting import Bold, as_list, as_marked_list,  \
     Italic
 
 from TokenData import TOKEN
-from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY
+from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY, utils_router
 from quiz import router_quiz
-from Keyboards import commands_kb, animal_custody_kb, phone_kb
+from Keyboards import commands_kb, animal_custody_kb, web_kb
 
 
 router = Router()
@@ -46,7 +46,7 @@ async def about_message(message: Message):
         ABOUT_ZOO,
         '',
         Bold('✨ Станьте хранителем!'),
-        ABOUT_CUSTODY
+        ABOUT_CUSTODY,
     )
 
     await message.answer(content.as_html(), reply_markup=animal_custody_kb)
@@ -55,11 +55,11 @@ async def about_message(message: Message):
 @router.message(Command('contact'))
 async def contact_message(message: Message):
     """ Contact message using command /contact """
-    content = as_list(
+    content = as_marked_list(
         *ALL_CONTACTS,
-        sep='\n\n'
+        marker='\n🌱 '
     )
-    await message.answer(content.as_html(), reply_markup=phone_kb)
+    await message.answer(**content.as_kwargs(), reply_markup=web_kb)
 
 
 async def start_bot():
@@ -69,6 +69,7 @@ async def start_bot():
     dp = Dispatcher()
     dp.include_router(router)
     dp.include_router(router_quiz)
+    dp.include_router(utils_router)
     await dp.start_polling(bot)
 
 

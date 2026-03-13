@@ -1,7 +1,7 @@
-from aiogram.utils.keyboard import KeyboardBuilder, KeyboardButton, \
+from aiogram.utils.keyboard import KeyboardButton, \
     ReplyKeyboardBuilder
 from aiogram.utils.keyboard import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.keyboard import ReplyKeyboardMarkup
+# from aiogram.utils.keyboard import ReplyKeyboardMarkup
 
 
 def commands_kb():
@@ -25,8 +25,13 @@ animal_custody_kb = InlineKeyboardMarkup(inline_keyboard=[
                           url='https://moscowzoo.ru/about/guardianship/')]])
 
 
-phone_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
-    text="📞 Позвонить в зоопарк", url="tel:+74957753370")]])
+# phone_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
+#     text="📞 Позвонить в зоопарк", url="tel:+74957753370")]])
+
+web_kb = InlineKeyboardMarkup(
+    inline_keyboard=[[InlineKeyboardButton
+                      (text='🤗  Посетите наш сайт',
+                       url='https://moscowzoo.ru/')]])
 
 
 def survey_options_kb(options):
