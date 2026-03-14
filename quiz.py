@@ -4,8 +4,9 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
+from aiogram.utils.formatting import Bold, as_list, as_marked_list
 
-from Keyboards import survey_options_kb
+from Keyboards import survey_options_kb, share_keyboard
 from quiz_questions import QUIZ_QUESTIONS, RESULTS
 
 DEFAULT_QUIZ_DATA = {
@@ -20,7 +21,7 @@ class Quiz(StatesGroup):
 
 @router_quiz.message(Command('survey'))
 async def start_survey(message: Message, state: FSMContext):
-    " Function sets the initial state "
+    """ Function sets the initial state """
     await state.set_state(Quiz.asking)
     await state.update_data(**DEFAULT_QUIZ_DATA)
     await handle_survey(message, state)
@@ -55,11 +56,37 @@ async def handle_survey(message: Message, state: FSMContext):
 
 
 async def show_result(message: Message, state: FSMContext, winner: str):
+    await message.answer(text='Загружаю результат...',
+                         reply_markup=ReplyKeyboardRemove())
+
     survey_result = RESULTS.get(winner)
-    await message.answer_photo(
-        photo=survey_result.get('image'),
-        caption=f"Тест завершен!\n\n{survey_result.get('message')}",
-        reply_markup=ReplyKeyboardRemove()
+    content = as_list(
+        f'Тест завершен!',
+        f"{survey_result.get('message')}",
+        '\n',
+        Bold('Станьте ангелом-хранителем!'),
+        'Московский зоопарк уже более 160 лет заботится о редких видах. Программа '
+        '«Клуб друзей» дает возможность каждому внести вклад в сохранение природы.',
+        '\n',
+        'Опека — это не просто благотворительность, это особая связь с животным. '
+        'Благодаря вашей поддержке мы обеспечиваем наших подопечных лучшими '
+        'кормами, игрушками и комфортными вольерами.',
+        '\n',
+        Bold('Что дает опека?'),
+        as_marked_list(
+            'Именная табличка на вольере.',
+            'Бесплатный вход в зоопарк.',
+            'Участие в специальных мероприятиях и встречах.',
+            marker='✅ '
+        ),
+        '\n',
+        'Узнать больше об опеке можно по команде /contact или на нашем '
+        'официальном сайте. ✨'
+    )
+
+    await message.answer_photo(photo=survey_result.get('image'),
+                               caption=content.as_html(),
+                               reply_markup=share_keyboard(survey_result.get('animal'))
     )
     await state.clear()
 
