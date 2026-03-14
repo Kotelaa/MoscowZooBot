@@ -1,5 +1,7 @@
+import urllib.parse
+
 from aiogram.utils.keyboard import KeyboardButton, \
-    ReplyKeyboardBuilder
+    ReplyKeyboardBuilder, InlineKeyboardBuilder
 from aiogram.utils.keyboard import InlineKeyboardMarkup, InlineKeyboardButton
 # from aiogram.utils.keyboard import ReplyKeyboardMarkup
 
@@ -27,6 +29,7 @@ animal_custody_kb = InlineKeyboardMarkup(inline_keyboard=[
 # phone_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(
 #     text="📞 Позвонить в зоопарк", url="tel:+74957753370")]])
 
+
 web_kb = InlineKeyboardMarkup(
     inline_keyboard=[[InlineKeyboardButton
                       (text='🤗  Посетите наш сайт',
@@ -39,6 +42,28 @@ def survey_options_kb(options):
         keyboard.add(KeyboardButton(text=option))
     keyboard.adjust(2)
     return keyboard.as_markup(resize_keyboard=True)
+
+
+def share_keyboard(animal_name):
+    share_text = (f"Я прошел тест от Московского зоопарка и моё тотемное "
+                  f"животное – {animal_name}! 🐾 Узнай своё здесь:")
+    bot_link = 'https://t.me/Moskva_Zoo_bot'
+
+    encoded_text = urllib.parse.quote(share_text)
+
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(InlineKeyboardButton(
+        text="✈️ Поделиться в Telegram",
+        url=f"https://t.me/share/url?url={bot_link}&text={encoded_text}"))
+    keyboard.row(InlineKeyboardButton(
+        text="💙 Поделиться в VK",
+        url=f"https://vk.com/share.php?url={bot_link}&title={encoded_text}"))
+    keyboard.row(InlineKeyboardButton(
+        text='Узнать больше о опеке',
+        url='https://moscowzoo.ru/about/guardianship/'))
+    return keyboard.as_markup(resize_keyboard=True)
+
+
 
 
 

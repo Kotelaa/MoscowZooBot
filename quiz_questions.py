@@ -76,16 +76,19 @@ QUIZ_QUESTIONS = [
 
 RESULTS = {
         "mammals": {
+            'animal': 'Млекопитающие',
             'message': "Тебе подходит млекопитающее! Твой символ – заботливая Панда. 🐼",
-            'image': 'AgACAgIAAxkBAAOJabGHBpgukr-pERRvqPSNJkFMyJ8AAjMYaxvxGZBJLd5Hvgz1Bf0BAAMCAAN5AAM6BA'
-                    },
+            'image': 'AgACAgIAAxkBAAOJabGHBpgukr-pERRvqPSNJkFMyJ8AAjMYaxvxGZBJLd5Hvgz1Bf0BAAMCAAN5AAM6BA'},
         "birds": {
+            'animal': 'Птицы',
             'message': "Тебе подходит птица! Твой символ – вольный Розовый фламинго. 🦩",
             'image': 'AgACAgIAAxkBAAOLabGHiBHPEqwAARpOUwACgf4L_vAhAAI7GGsb8RmQSUcvUC2H5pIiAQADAgADeQADOgQ'},
         "reptiles": {
+            'animal': 'Рептилии',
             'message': "Тебе подходит рептилия! Твой символ – мудрый Питон. 🐍",
             'image': 'AgACAgIAAxkBAAONabGH3sVcvNiNwCobkeTm6Me1H9oAAkgYaxvxGZBJs_fDih348jUBAAMCAAN5AAM6BA'},
         "amphibians": {
+            'animal': 'Земноводные',
             'message': "Тебе подходит земноводное! Твой символ – адаптивная Лягушка. 🐸",
             'image': 'AgACAgIAAxkBAAOPabGIFm5NlBKcskp5i5-6mmLE0kEAAkkYaxvxGZBJz__qNqr8FmsBAAMCAAN5AAM6BA'}
     }
