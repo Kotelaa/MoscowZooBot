@@ -1,13 +1,16 @@
-from aiogram import Router
-from aiogram.types import Message
+from aiogram import Router, F
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
-from aiogram.utils.formatting import Bold, as_list, as_marked_list
+from aiogram.utils.formatting import Bold, as_list, as_line
 
 from Keyboards import survey_options_kb, share_keyboard
 from quiz_questions import QUIZ_QUESTIONS, RESULTS
+from const import SURVEY_MESSAGE
+from TokenData import ADMIN_ID
+
 
 DEFAULT_QUIZ_DATA = {
     'current_step': 0,
@@ -16,8 +19,11 @@ DEFAULT_QUIZ_DATA = {
 
 router_quiz = Router()
 
+
 class Quiz(StatesGroup):
     asking = State()
+    finished = State()
+
 
 @router_quiz.message(Command('survey'))
 async def start_survey(message: Message, state: FSMContext):
@@ -32,7 +38,8 @@ async def handle_survey(message: Message, state: FSMContext):
     """ Asks questions about the user's compatibility with different animals """
     data = await state.get_data()
     current_step = data.get('current_step', 0)
-    scores = data.get('scores', {'mammals': 0, 'birds': 0, 'reptiles': 0, 'amphibians': 0})
+    scores = data.get('scores', {'mammals': 0, 'birds': 0, 'reptiles': 0,
+                                 'amphibians': 0})
 
     if current_step > 0:
         prev_question = QUIZ_QUESTIONS[current_step-1]
@@ -64,31 +71,45 @@ async def show_result(message: Message, state: FSMContext, winner: str):
         f'Тест завершен!',
         f"{survey_result.get('message')}",
         '\n',
-        Bold('Станьте ангелом-хранителем!'),
-        'Московский зоопарк уже более 160 лет заботится о редких видах. Программа '
-        '«Клуб друзей» дает возможность каждому внести вклад в сохранение природы.',
-        '\n',
-        'Опека — это не просто благотворительность, это особая связь с животным. '
-        'Благодаря вашей поддержке мы обеспечиваем наших подопечных лучшими '
-        'кормами, игрушками и комфортными вольерами.',
-        '\n',
-        Bold('Что дает опека?'),
-        as_marked_list(
-            'Именная табличка на вольере.',
-            'Бесплатный вход в зоопарк.',
-            'Участие в специальных мероприятиях и встречах.',
-            marker='✅ '
-        ),
-        '\n',
-        'Узнать больше об опеке можно по команде /contact или на нашем '
-        'официальном сайте. ✨'
+        SURVEY_MESSAGE
     )
 
     await message.answer_photo(photo=survey_result.get('image'),
                                caption=content.as_html(),
                                reply_markup=share_keyboard(survey_result.get('animal'))
     )
-    await state.clear()
 
+    winner_animal = survey_result.get('animal')
+    await state.update_data(quiz_result=winner_animal)
+
+
+@router_quiz.callback_query(F.data == 'contact_staff')
+async def contact_staff(callback: CallbackQuery, state: FSMContext):
+    """ Processes the request to contact an employee of the ZOO """
+    user_data = await state.get_data()
+    result = user_data.get('quiz_result', 'Неизвестно')
+
+    user = callback.from_user
+
+    admin_message = as_list(
+        Bold('🚀 Новая заявка на консультацию! \n\n'),
+        as_line(Bold('Пользователь: '), f'{user.username or 'нет юзернейма'}\n'),
+        as_line(Bold('Имя: '), f'{user.full_name}'),
+        as_line(Bold('ID: '), f'{user.id}'),
+        as_line(Bold('Результат теста: '), f'{result}')
+    )
+    callback_answer = ("Заявка отправлена! Сотрудник свяжется с вами "
+                       "в ближайшее время.")
+
+    try:
+        await callback.bot.send_message(chat_id=ADMIN_ID,
+                                        text=admin_message.as_html())
+        await callback.answer(callback_answer, show_alert=True)
+
+        await state.clear()
+
+    except Exception as e:
+        await callback.answer("Ошибка при отправке заявки.")
+        print(f'Ошибка: {e}')
 
 

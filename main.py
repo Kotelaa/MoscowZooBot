@@ -10,8 +10,8 @@ from aiogram.utils.formatting import Bold, as_list, as_marked_list,  \
     Italic
 
 from TokenData import TOKEN
-from utils import ALL_CONTACTS, ABOUT_ZOO, ABOUT_CUSTODY, utils_router, \
-    HELP_MESSAGE
+from utils import ALL_CONTACTS, utils_router
+from const import ABOUT_ZOO, ABOUT_CUSTODY, HELP_MESSAGE
 from quiz import router_quiz
 from Keyboards import commands_kb, animal_custody_kb, web_kb
 
