@@ -61,6 +61,10 @@ def share_keyboard(animal_name):
     keyboard.row(InlineKeyboardButton(
         text='Узнать больше о опеке',
         url='https://moscowzoo.ru/about/guardianship/'))
+    keyboard.row(InlineKeyboardButton(
+        text="📞 Связаться с сотрудником",
+        callback_data="contact_staff")
+    )
     return keyboard.as_markup(resize_keyboard=True)
 
 
